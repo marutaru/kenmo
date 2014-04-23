@@ -2,27 +2,36 @@ express = require "express"
 app = express()
 
 request = require "request"
-$ = require "cheerio"
+cheerio = require "cheerio"
 io = require "socket.io"
+iconv = require "iconv"
 
-url = "http://fox.2ch.net/poverty/"
+app.set "views", __dirname+"/views"
+app.set "view engine","jade"
+
+
 html = ""
-
 settings =
-  "url":"http://fox.2ch.net/poverty/"
-  "encoding":"binary"
+  "url":"http://fox.2ch.net/poverty/subback.html"
+  "encoding":null
 
 request settings,(err,res,body)->
   if !err and res.statusCode is 200
     console.log "success"
-    console.log body
-    html = body
+    conv = iconv.Iconv "shift_JIS","UTF-8//TRANSLIT//IGNORE"
+    html = conv.convert(body).toString()
+    $ = cheerio.load html
+    console.log $("a").text()
+    html = $("a").text()
   else console.log err
 
 
-app.get("/",(req,res)->
+app.get "/",(req,res)->
   res.send html
-)
+
+app.get "/kenmo",(req,res)->
+  res.render "index",
+    html:html
 
 app.listen(3000)
 

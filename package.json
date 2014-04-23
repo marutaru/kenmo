@@ -10,7 +10,9 @@
     "express":"*",
     "request":"*",
     "socket.io":"*",
-    "cheerio":"*"
+    "cheerio":"*",
+    "iconv":"*",
+    "jade":"*"
   },
   "repository": "",
   "author": "",
